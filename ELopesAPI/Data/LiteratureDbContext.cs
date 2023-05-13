@@ -1,4 +1,5 @@
 ﻿using ELopesAPI.Models.Entities;
+using ELopesAPI.Models.JoinEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
@@ -12,8 +13,10 @@ namespace ELopesAPI.Data
         public DbSet<BookReview> BooksReviews { get; set; }
         public DbSet<Shop> Shops { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<Post> Posts { get; set; }
         public DbSet<NewsPost> NewsPosts { get; set; }
+        public DbSet<BlogPost> BlogPost { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<NewsPostTag> NewsPostsTags { get; set; }
 
         public LiteratureDbContext(DbContextOptions<LiteratureDbContext> options) : base(options)
         {
@@ -38,24 +41,26 @@ namespace ELopesAPI.Data
 
            // modelBuilder.Entity<Commented>().ToTable("Commented");
 
-            modelBuilder.Entity<Post>().ToTable("Posts");
-
-            modelBuilder.Entity<Comment>()
-                .HasOne<Post>(c => c.Post)
-                .WithMany(c => c.Comments) 
-                .HasForeignKey(c => c.PostId)
-                .IsRequired(false);
-
-            modelBuilder.Entity<NewsPost>().ToTable("NewsPosts");
+            modelBuilder.Entity<NewsPost>().ToTable("NewsPost");
 
             modelBuilder.Entity<Comment>()
                 .HasOne<NewsPost>(c => c.NewsPost)
-                .WithMany(c => c.Comments)
+                .WithMany(c => c.Comments) 
                 .HasForeignKey(c => c.NewsPostId)
                 .IsRequired(false);
 
-            //modelBuilder.Entity<Commented>()
-            //    .ToTable("Commented", t => t.ExcludeFromMigrations());
+            modelBuilder.Entity<BlogPost>().ToTable("BlogPost");
+
+            modelBuilder.Entity<Comment>()
+                .HasOne<BlogPost>(c => c.BlogPost)
+                .WithMany(c => c.Comments)
+                .HasForeignKey(c => c.BlogPostId)
+                .IsRequired(false);
+
+            modelBuilder.Entity<NewsPost>()
+                .HasMany(n => n.Tags)
+                .WithMany(t => t.NewsPosts)
+                .UsingEntity<NewsPostTag>();
         }
 
         public bool BookExists(int id)
