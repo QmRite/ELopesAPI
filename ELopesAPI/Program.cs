@@ -21,6 +21,17 @@ builder.Services.AddDbContext<LiteratureDbContext>(options =>
 
 builder.Services.AddCoreAdmin();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder =>
+        {
+            builder.WithOrigins("http://127.0.0.1:5501")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -35,6 +46,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.MapDefaultControllerRoute();
+
+app.UseCors();
 
 app.UseAuthorization();
 

@@ -24,7 +24,7 @@ namespace ELopesAPI.Controllers
             var books = await context.Books
                 .ToListAsync();
 
-            var bookDto = books.Select(BookMapper.BookToDtoMap);
+            var bookDto = books.Select(BookMapper.MapBookToDto);
 
             return Ok(bookDto);
         }

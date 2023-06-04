@@ -7,7 +7,7 @@ namespace ELopesAPI.Mappers
 {
     public static class BookMapper
     {
-        public static Book DtoToBookMap(BookDto bookDto)
+        public static Book MapDtoToBook(BookDto bookDto)
         {
             return new Book()
             {
@@ -19,7 +19,7 @@ namespace ELopesAPI.Mappers
             };
         }
 
-        public static BookDto BookToDtoMap(Book book)
+        public static BookDto MapBookToDto(Book book)
         {
             return new BookDto()
             {

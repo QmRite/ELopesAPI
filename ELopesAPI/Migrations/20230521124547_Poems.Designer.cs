@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ELopesAPI.Migrations
 {
     [DbContext(typeof(LiteratureDbContext))]
-    [Migration("20230513131712_Initial migration")]
-    partial class Initialmigration
+    [Migration("20230521124547_Poems")]
+    partial class Poems
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -57,9 +57,10 @@ namespace ELopesAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<byte[]>("Cover")
+                    b.Property<string>("Cover")
                         .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -208,6 +209,11 @@ namespace ELopesAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Cover")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
@@ -223,6 +229,46 @@ namespace ELopesAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("NewsPost", (string)null);
+                });
+
+            modelBuilder.Entity("ELopesAPI.Models.Entities.Poem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Poems");
+                });
+
+            modelBuilder.Entity("ELopesAPI.Models.Entities.PoemTag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PoemTags");
                 });
 
             modelBuilder.Entity("ELopesAPI.Models.Entities.Shop", b =>
@@ -279,6 +325,21 @@ namespace ELopesAPI.Migrations
                     b.HasIndex("TagId");
 
                     b.ToTable("NewsPostsTags");
+                });
+
+            modelBuilder.Entity("ELopesAPI.Models.JoinEntities.PoemTagJoin", b =>
+                {
+                    b.Property<int>("PoemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PoemTagId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PoemId", "PoemTagId");
+
+                    b.HasIndex("PoemTagId");
+
+                    b.ToTable("PoemTagJoins");
                 });
 
             modelBuilder.Entity("ELopesAPI.Models.Entities.BookLink", b =>
@@ -351,6 +412,25 @@ namespace ELopesAPI.Migrations
                     b.Navigation("Tag");
                 });
 
+            modelBuilder.Entity("ELopesAPI.Models.JoinEntities.PoemTagJoin", b =>
+                {
+                    b.HasOne("ELopesAPI.Models.Entities.Poem", "Poem")
+                        .WithMany("PoemTagJoins")
+                        .HasForeignKey("PoemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ELopesAPI.Models.Entities.PoemTag", "PoemTag")
+                        .WithMany("PoemTagJoin")
+                        .HasForeignKey("PoemTagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Poem");
+
+                    b.Navigation("PoemTag");
+                });
+
             modelBuilder.Entity("ELopesAPI.Models.Entities.BlogPost", b =>
                 {
                     b.Navigation("Comments");
@@ -368,6 +448,16 @@ namespace ELopesAPI.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("NewsPostsTags");
+                });
+
+            modelBuilder.Entity("ELopesAPI.Models.Entities.Poem", b =>
+                {
+                    b.Navigation("PoemTagJoins");
+                });
+
+            modelBuilder.Entity("ELopesAPI.Models.Entities.PoemTag", b =>
+                {
+                    b.Navigation("PoemTagJoin");
                 });
 
             modelBuilder.Entity("ELopesAPI.Models.Entities.Tag", b =>

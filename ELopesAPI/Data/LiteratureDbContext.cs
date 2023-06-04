@@ -18,6 +18,11 @@ namespace ELopesAPI.Data
         public DbSet<Tag> Tags { get; set; }
         public DbSet<NewsPostTag> NewsPostsTags { get; set; }
 
+        public DbSet<Poem> Poems { get; set; }
+        public DbSet<PoemTag> PoemTags { get; set; }
+        public DbSet<PoemTagJoin> PoemTagJoins { get; set; }
+
+
         public LiteratureDbContext(DbContextOptions<LiteratureDbContext> options) : base(options)
         {
         }
@@ -61,6 +66,11 @@ namespace ELopesAPI.Data
                 .HasMany(n => n.Tags)
                 .WithMany(t => t.NewsPosts)
                 .UsingEntity<NewsPostTag>();
+
+            modelBuilder.Entity<Poem>()
+                .HasMany(n => n.Tags)
+                .WithMany(t => t.Poems)
+                .UsingEntity<PoemTagJoin>();
         }
 
         public bool BookExists(int id)

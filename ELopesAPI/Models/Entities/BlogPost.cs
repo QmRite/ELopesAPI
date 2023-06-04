@@ -10,6 +10,9 @@ namespace ELopesAPI.Models.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [MaxLength(500)]
+        public string Cover { get; set; }
+
         [MaxLength(200)]
         public string Title { get; set; }
 

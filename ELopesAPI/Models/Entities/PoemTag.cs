@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using ELopesAPI.Models.JoinEntities;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using ELopesAPI.Models.JoinEntities;
 using Newtonsoft.Json;
 
 namespace ELopesAPI.Models.Entities
 {
-    public class Tag
+    public class PoemTag
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -14,11 +14,12 @@ namespace ELopesAPI.Models.Entities
         [MaxLength(50)]
         public string Name { get; set; }
 
-        [JsonIgnore]
-        public ICollection<NewsPost>? NewsPosts { get; set; }
 
         [JsonIgnore]
-        public ICollection<NewsPostTag>? NewsPostTag { get; set; }
+        public ICollection<Poem>? Poems { get; set; }
+
+        [JsonIgnore]
+        public ICollection<PoemTagJoin>? PoemTagJoin { get; set; }
 
         public override string ToString()
         {

@@ -13,7 +13,8 @@ namespace ELopesAPI.Models.Entities
         [MaxLength(50)] 
         public string Title { get; set; }
 
-        public byte[] Cover { get; set; }
+        [MaxLength(500)]
+        public string Cover { get; set; }
 
         [MaxLength(2000)]
         public string Description { get; set; }
